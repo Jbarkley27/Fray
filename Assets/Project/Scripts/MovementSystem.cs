@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public class MovementSystem : MonoBehaviour
@@ -6,16 +7,12 @@ public class MovementSystem : MonoBehaviour
     public LineRenderer velocityLine;
     private Rigidbody rb;
     public float rotateSpeed = 1.0f;
+    [Range(0f, 1f)]
     public float boostSpeed = 1.0f; 
-    public ForceMode forceMode;
-    public Vector3 storedVelocity;
     public Animator animator;
     public float dampTime;
     public float rotateDirection;
     public float rotateDifference;
-    public float frozenYAxis;
-    public float slowDownTime = 1.0f;
-    public Coroutine slowDownCoroutine;
 
     void Start()
     {
@@ -60,7 +57,7 @@ public class MovementSystem : MonoBehaviour
             rotateSpeed * Time.deltaTime // Interpolation factor
         );
 
-        rotateDifference = Quaternion.Angle(rb.rotation, targetRotation);
+        rotateDifference = Quaternion.Angle(gameObject.transform.rotation, targetRotation);
 
         // find out if its rotating left or right based on the sign
         rotateDirection = Vector3.Dot(targetDirection, transform.right);
@@ -72,48 +69,20 @@ public class MovementSystem : MonoBehaviour
     public void Boost(Vector3 direction)
     {
         if (TurnBasedManager.instance.IsTimePaused())
-            return;
-        
-        rb.AddForce(direction * boostSpeed, forceMode);
+            return; 
+        rb.DOMove(direction, boostSpeed).SetEase(Ease.InOutSine);
     }
 
     public void FreezeMovement()
     {
         if (rb == null)
             return;
-        // Store the current velocity
-        frozenYAxis = rb.transform.rotation.y;
-        storedVelocity = rb.velocity;
-        rb.velocity = Vector3.zero;
-        // if (slowDownCoroutine != null)
-        //     StopCoroutine(slowDownCoroutine);
-        // slowDownCoroutine = StartCoroutine(SlowDown());
     }
-
-    // public IEnumerator SlowDown()
-    // {
-    //     if (rb == null)
-    //         yield break;
-
-    //     // Slow down the ship
-    //     while (rb.velocity.magnitude > 0.f)
-    //     {
-    //         rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, slowDownTime * Time.deltaTime);
-    //         Debug.Log("Slowing down");
-    //         yield return null;
-    //     }
-
-    //     // Reset the velocity
-    //     rb.velocity = Vector3.zero;
-    // }
 
     public void UnfreezeMovement()
     {
         if (rb == null)
             return;
-
-        if (slowDownCoroutine != null)
-            StopCoroutine(slowDownCoroutine);
     }
 
     public void HandleAnimations()

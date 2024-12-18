@@ -29,6 +29,5 @@ public class Skill : MonoBehaviour
         activeBorder.enabled = false;
     }
 
-    public virtual void UseSkill(Vector3 direction)
-    { }
+    public virtual void UseSkill(Vector3 direction){}
 }

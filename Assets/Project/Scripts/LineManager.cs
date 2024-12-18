@@ -69,15 +69,16 @@ public class LineManager : MonoBehaviour
     public void ListenForMouseUp()
     {
         if (!TurnBasedManager.instance.IsTimePaused()) return;
+        if (UITest.instance.isPointerOverUIElement) return;
         if (Input.GetMouseButtonUp(0))
         {
             TurnBasedManager.instance.ResumeTime();
 
 
             // get the direction of the line
-            Vector3 direction = lineEndObject.transform.position - player.transform.position;
+            // Vector3 direction = lineEndObject.transform.position - player.transform.position;
 
-            SkillManager.instance.UseActiveSkill(direction);
+            SkillManager.instance.UseActiveSkill(GetLineEndPosition());
         }
     }
 
