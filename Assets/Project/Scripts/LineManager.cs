@@ -7,9 +7,14 @@ public class LineManager : MonoBehaviour
     public LineRenderer lineRenderer;
     public GameObject lineEndObject;
     public LayerMask touchLayer;
+    public LayerMask enemyLayer;
     public float clampedLineLength = 5.0f;
     public static LineManager instance;
     public GameObject player;
+
+    public GameObject hoverPanel;
+
+    public HoverManager hoverManager;
 
     private void Awake()
     {
@@ -66,6 +71,24 @@ public class LineManager : MonoBehaviour
        SetLineRendererSettings(lineStart, lineEnd, 2);
     }
 
+    // create a function to check if the mouse is hovering over an enemy
+    public bool IsMouseOverEnemy()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, enemyLayer))
+        {
+            if (hit.collider.gameObject.tag == "enemy-visual")
+            {
+                hoverManager.ShowEnemyStats(hit.collider.gameObject.GetComponent<EnemyBaseComponent>());
+                return true;
+            }
+        }
+        hoverManager.HideEnemyStats();
+        return false;
+    }
+
+
     public void ListenForMouseUp()
     {
         if (!TurnBasedManager.instance.IsTimePaused()) return;
@@ -73,11 +96,6 @@ public class LineManager : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             TurnBasedManager.instance.ResumeTime();
-
-
-            // get the direction of the line
-            // Vector3 direction = lineEndObject.transform.position - player.transform.position;
-
             SkillManager.instance.UseActiveSkill(GetLineEndPosition());
         }
     }

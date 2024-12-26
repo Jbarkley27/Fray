@@ -4,9 +4,20 @@ using UnityEngine;
 public class SkillManager : MonoBehaviour {
 
     public static SkillManager instance;
+    public List<SkillID> skillIDs;
     public List<Skill> skills;
     public Skill activeSkill;
     public Skill defaultMoveSkill;
+
+    public Transform skillParent;
+
+    public int maxSkillSize = 20;
+
+    public enum SkillID
+    {
+        BasicMoveSkill,
+        BasicShootSkill
+    }
 
     public MovementSystem movementSystem;
 
@@ -22,6 +33,11 @@ public class SkillManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+    private void Start()
+    {
+        RefreshSkillList();
+    }
+
     private void Update()
     {
         if (activeSkill == null)
@@ -30,13 +46,7 @@ public class SkillManager : MonoBehaviour {
 
     public void AssignActiveSkill(Skill newActiveSkill)
     {
-        foreach (Skill skill in skills)
-        {
-            skill.SetInactive();
-        }
-
         activeSkill = newActiveSkill;
-        newActiveSkill.SetActive();
     }
 
     public void UseActiveSkill(Vector3 direction)
@@ -50,7 +60,29 @@ public class SkillManager : MonoBehaviour {
 
     public void AddToList(Skill skill)
     {
+        if (skills.Count >= maxSkillSize)
+        {
+            Debug.LogError("Skill list is full, cannot add more skills");
+            return;
+        }
         skills.Add(skill);
     }
+
+    public void RefreshSkillList()
+    {
+        skills.Clear();
+        foreach (SkillID skillID in skillIDs)
+        {
+            Skill skill = SkillLibrary.GetSkillFromID(skillID);
+            if (skill != null)
+            {
+                skills.Add(skill);
+            } else {
+                Debug.LogError("Could not find skill with ID: " + skillID);
+            }
+        }
+    }
+
+    
     
 }
