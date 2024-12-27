@@ -41,7 +41,7 @@ public class TurnBasedManager : MonoBehaviour
     void Start()
     {
         // slow down time
-        SlowDownTime();
+        Invoke("SlowDownTime", 1);
     }
 
     public void SlowDownTime()

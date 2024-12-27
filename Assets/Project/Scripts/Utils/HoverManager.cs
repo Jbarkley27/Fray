@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class HoverManager : MonoBehaviour
 {
@@ -36,11 +38,12 @@ public class HoverManager : MonoBehaviour
     }
 
 
-    public void ShowEnemyStats(EnemyBaseComponent enemy)
+    public void ShowEnemyStats(EnemyStatModule enemy)
     {
         HideAllPanels();
         enemyStatsRoot.transform.position = Input.mousePosition + new Vector3(xOffset, 0, 0);
         enemyStatsRoot.SetActive(true);
+        enemyStatsRoot.GetComponent<EnemyStatUI>().UpdateUI(enemy);
     }
 
     public void HideEnemyStats()

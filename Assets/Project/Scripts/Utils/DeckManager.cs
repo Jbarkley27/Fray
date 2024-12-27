@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class DeckManager : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class DeckManager : MonoBehaviour
     [Header("Draw")]
     public List<SkillUI> draw;
     public Transform drawUITransform;
+    public TMP_Text drawSizeText;
 
     [Header("Hand")]
     public List<SkillUI> hand;
@@ -24,12 +27,17 @@ public class DeckManager : MonoBehaviour
     [Header("Discard")]
     public List<SkillUI> discard;
     public Transform discardUITransform;
+    public TMP_Text discardSizeText;
 
     [Header("Exhaust")]
     public List<SkillUI> exhaust;
     public Transform exhaustUITransform;
+    public TMP_Text exhaustSizeText;
 
     public int MaxHandSize = 3;
+    public int StartHandSize = 3;
+
+    public SkillUI coreSkillUI;
 
 
 
@@ -54,13 +62,35 @@ public class DeckManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateAllPileCounts();
+    }
+
+    public void HideAllSkillBorders()
+    {
+        foreach (SkillUI skillUI in hand)
+        {
+            skillUI.HideActiveBorder();
+        }
+
+        coreSkillUI.HideActiveBorder();
+    }
+
+    public void UpdateAllPileCounts()
+    {
+        drawSizeText.text = draw.Count.ToString() + "/" + deck.Count.ToString();
+        discardSizeText.text = discard.Count.ToString();
+        exhaustSizeText.text = exhaust.Count.ToString();
     }
 
     public void InitiateBattle()
     {
         InitiateDeck();
         InitiateDraw();
+        UpdateCoreSkill();
+        for (int i = 0; i < StartHandSize; i++)
+        {
+            DrawCard();
+        }
     }
 
     // gets all skills and add them into the deck
@@ -80,11 +110,18 @@ public class DeckManager : MonoBehaviour
     public void InitiateDraw()
     {
         draw.Clear();
+
+        // we want to copy the deck list so we don't modify the original deck
         foreach (SkillUI skillUI in deck)
         {
             SkillUI newSkillUI = Instantiate(skillUI, drawUITransform).GetComponent<SkillUI>();
             draw.Add(newSkillUI);
         }
+    }
+
+    public void UpdateCoreSkill()
+    {
+        coreSkillUI.SetupUI(SkillManager.instance.coreSkill);
     }
 
     public void DrawCard()
@@ -104,13 +141,18 @@ public class DeckManager : MonoBehaviour
     }
 
     public void AddToHand()
-    {
-        if (!CanDrawCard()) return;
-        
+    {        
+        Debug.Log("Adding to hand");
         SkillUI skillUI = draw[0];
-        hand.Add(skillUI);
         skillUI.transform.SetParent(handUITransform);
+        skillUI.HideActiveBorder();
+        hand.Add(skillUI);
         draw.RemoveAt(0);
+        skillUI.canvasGroup.alpha = 0;
+        skillUI.canvasGroup.DOFade(1, Random.Range(0.4f, .6f))
+        .SetEase(Ease.InSine)
+        .OnComplete(() => {
+        });
     }
 
     public void AddToExhaust(SkillUI skillUI)
@@ -123,7 +165,28 @@ public class DeckManager : MonoBehaviour
     {
         hand.Remove(skillUI);
         discard.Add(skillUI);
+        skillUI.HideActiveBorder();
         skillUI.transform.SetParent(discardUITransform);
+        skillUI.canvasGroup.DOFade(0, .1f)
+        .SetEase(Ease.OutSine)
+        .OnComplete(() => {
+            DrawCard();
+        });
+        
+    }
+
+    public void DiscardActiveSkill()
+    {
+        if (SkillManager.instance.activeSkill == null) return;
+        foreach (SkillUI skillUI in hand)
+        {
+            if (skillUI.skill == SkillManager.instance.activeSkill
+                && skillUI != coreSkillUI)
+            {
+                DiscardCard(skillUI);
+                return;
+            }
+        }
     }
 
     public void ShuffleDiscardIntoDraw()
@@ -146,6 +209,7 @@ public class DeckManager : MonoBehaviour
 
     public bool CanDrawCard()
     {
+        Debug.Log(hand.Count + " -- " + MaxHandSize);
         return hand.Count < MaxHandSize;
     }
 
@@ -181,5 +245,23 @@ public class DeckManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+
+    public bool IsInHand(Skill skill)
+    {
+        foreach (SkillUI skillUI in hand)
+        {
+            if (skillUI.skill == skill)
+            {
+                return true;
+            }
+        }
+
+        if (coreSkillUI.skill == skill)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -17,14 +17,7 @@ public class Projectile : MonoBehaviour
         this.direction = direction;
         this.force = force;
 
-        // apply force to begin moving
-        // gameObject.GetComponent<Rigidbody>().velocity = direction.normalized * force;
-
-        // Debug.Log("Velocity: " + direction.normalized * force);
-
         gameObject.GetComponent<Rigidbody>().velocity = gameObject.transform.forward * force;
-
-        // StartCoroutine(RangeLifeTime());
 
         isSetup = true;
     }
@@ -50,8 +43,6 @@ public class Projectile : MonoBehaviour
         {
             gameObject.GetComponent<Rigidbody>().velocity = gameObject.transform.forward * force;
         }
-
-        // Debug.Log("Velocity: " + gameObject.GetComponent<Rigidbody>().velocity);
     }
 
 

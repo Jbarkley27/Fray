@@ -7,13 +7,16 @@ public class SkillManager : MonoBehaviour {
     public List<SkillID> skillIDs;
     public List<Skill> skills;
     public Skill activeSkill;
-    public Skill defaultMoveSkill;
-
-    public Transform skillParent;
-
+    public Skill coreSkill;
     public int maxSkillSize = 20;
 
     public enum SkillID
+    {
+        BasicMoveSkill,
+        BasicShootSkill
+    }
+
+    public enum EnemySkillID
     {
         BasicMoveSkill,
         BasicShootSkill
@@ -40,12 +43,12 @@ public class SkillManager : MonoBehaviour {
 
     private void Update()
     {
-        if (activeSkill == null)
-            AssignActiveSkill(defaultMoveSkill);
+
     }
 
     public void AssignActiveSkill(Skill newActiveSkill)
     {
+        if (newActiveSkill == activeSkill) return;
         activeSkill = newActiveSkill;
     }
 
@@ -55,6 +58,7 @@ public class SkillManager : MonoBehaviour {
         if (activeSkill != null)
         {
             activeSkill.UseSkill(direction);
+            DeckManager.instance.HideAllSkillBorders();
         }
     }
 
@@ -83,6 +87,15 @@ public class SkillManager : MonoBehaviour {
         }
     }
 
-    
+    public void RemoveActiveSkill()
+    {
+        List<SkillUI> handAndCoreSkillsList = DeckManager.instance.hand;
+
+        foreach(SkillUI skillUI in handAndCoreSkillsList)
+        {
+            skillUI.HideActiveBorder();
+        }
+        activeSkill = null;
+    }
     
 }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
@@ -33,6 +34,7 @@ public class LineManager : MonoBehaviour
         RenderLine();
         ListenForMouseUp();
         GetLineLength();
+        IsMouseOverEnemy();
     }
 
     public Vector3 GetTurnDirection()
@@ -80,7 +82,8 @@ public class LineManager : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == "enemy-visual")
             {
-                hoverManager.ShowEnemyStats(hit.collider.gameObject.GetComponent<EnemyBaseComponent>());
+                Debug.Log("Mouse is over enemy");
+                hoverManager.ShowEnemyStats(hit.collider.gameObject.GetComponent<EnemyStatModule>());
                 return true;
             }
         }
@@ -95,8 +98,16 @@ public class LineManager : MonoBehaviour
         if (UITest.instance.isPointerOverUIElement) return;
         if (Input.GetMouseButtonUp(0))
         {
+            if (SkillManager.instance.activeSkill == null)
+            {
+                ErrorManager.instance.ShowNoActiveSkillError(4f, Ease.OutSine);
+                return;
+            }
             TurnBasedManager.instance.ResumeTime();
             SkillManager.instance.UseActiveSkill(GetLineEndPosition());
+            DeckManager.instance.DiscardActiveSkill();
+            SkillManager.instance.RemoveActiveSkill();
+            DeckManager.instance.HideAllSkillBorders();
         }
     }
 

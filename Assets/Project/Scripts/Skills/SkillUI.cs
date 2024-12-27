@@ -2,12 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class SkillUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class SkillUI : MonoBehaviour, IPointerClickHandler
 {
     public Skill skill;
     public Image skillImage;
     public Image skillBackground;
     public GameObject skillBorder;
+    public CanvasGroup canvasGroup;
 
     private void Awake() {
         skillBorder.SetActive(false);
@@ -20,14 +21,25 @@ public class SkillUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         skillBackground.color = skill.skillColor;
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        skillBorder.SetActive(true);
-    }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void HideActiveBorder()
     {
+        if(!DeckManager.instance.IsInHand(skill)) return;
         skillBorder.SetActive(false);
     }
 
+    public void ShowActiveBorder()
+    {
+        if(!DeckManager.instance.IsInHand(skill)) return;
+        skillBorder.SetActive(true);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(!DeckManager.instance.IsInHand(skill)) return;
+        Debug.Log("Clicked on " + skill.skillName);
+        DeckManager.instance.HideAllSkillBorders();
+        SkillManager.instance.AssignActiveSkill(skill);
+        ShowActiveBorder();
+    }
 }
