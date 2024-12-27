@@ -48,7 +48,9 @@ public class TurnBasedManager : MonoBehaviour
     {
         currentTimeState = TimeState.Pause;
         movementSystem.FreezeMovement();
+        EnemyManager.instance.StopAllEnemyMovement();
         ChangeStarfieldSpeed(0.1f);
+        EnemyManager.instance.GetAllNextIntention();
     }
 
     public void ResumeTime()
@@ -56,6 +58,7 @@ public class TurnBasedManager : MonoBehaviour
         currentTimeState = TimeState.Normal;
         ChangeStarfieldSpeed(1f);
         movementSystem.UnfreezeMovement();
+        EnemyManager.instance.ExecuteAllNextIntention();
 
         // invoke slow down time after 1 second
         Invoke("SlowDownTime", timeBetweenTurns);

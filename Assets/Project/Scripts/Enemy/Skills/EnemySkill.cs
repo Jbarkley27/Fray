@@ -8,5 +8,5 @@ public class EnemySkill: MonoBehaviour
     public Sprite skillIcon;
     public SkillManager.EnemySkillID skillID;
 
-    public virtual void UseSkill(Vector3 direction, Transform attackSource){}
+    public virtual void UseSkill(Vector3 direction, Transform attackSource, EnemyBaseComponent enemyBaseComponent){}
 }

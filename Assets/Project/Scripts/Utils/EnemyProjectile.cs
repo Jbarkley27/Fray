@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using DG.Tweening;
 
-public class Projectile : MonoBehaviour 
+public class EnemyProjectile : MonoBehaviour 
 {
     public float damage;
     public float range;
@@ -48,7 +48,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "enemy-visual")
+        if (collider.gameObject.tag == "player-hitbox")
         {
             Debug.Log("Hit enemy");
             Destroy(gameObject);

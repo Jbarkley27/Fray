@@ -16,7 +16,7 @@ public class EnemyBasicShootSkill : EnemySkill
     public float damage;
     public GameObject projectilePrefab;
 
-    public override void UseSkill(Vector3 direction, Transform attackSource)
+    public override void UseSkill(Vector3 direction, Transform attackSource, EnemyBaseComponent enemyBaseComponent)
     {
         ProjectileManager.instance.ShootProjectile(new ProjectileManager.ProjectileType(
             skillName,
