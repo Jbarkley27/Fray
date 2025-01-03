@@ -1,24 +1,19 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TurnBasedManager : MonoBehaviour
 {
     public float timeBetweenTurns = 1.0f;
-
     public enum TimeState
     {
         Normal,
         Pause
     }
-
     public List<ParticleSystem> starFieldVFX = new List<ParticleSystem>();
-
     public TimeState currentTimeState = TimeState.Normal;
     public static TurnBasedManager instance;
-
     public MovementSystem movementSystem;
+    public int turnCount = 0;
 
    private void Awake()
     {
@@ -38,32 +33,60 @@ public class TurnBasedManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
+    private void Start()
     {
-        // slow down time
+        turnCount = 0;
         Invoke("SlowDownTime", 1);
+        Debug.Log("Starting Battle");
     }
 
-    public void SlowDownTime()
+
+
+
+
+    // TIME HANDLING ---------------------------------------------------------
+    private void SlowDownTime()
     {
+        // set the current time state to pause
         currentTimeState = TimeState.Pause;
-        movementSystem.FreezeMovement();
+
+        // increment the turn count
+        turnCount++;
+
+        // freeze movements of all combatants and environment
+        Debug.Log("Stopping all movement");
         EnemyManager.instance.StopAllEnemyMovement();
         ChangeStarfieldSpeed(0.1f);
+
+        // have all enemies calculate their next move
+        Debug.Log("Enemies calculating next move");
         EnemyManager.instance.GetAllNextIntention();
     }
 
+
     public void ResumeTime()
     {
+        // set the current time state to normal
+        Debug.Log("Resuming time");
         currentTimeState = TimeState.Normal;
+
+        // unfreeze movements of all combatants and environment
         ChangeStarfieldSpeed(1f);
-        movementSystem.UnfreezeMovement();
+
+        // have all enemies execute their next move
         EnemyManager.instance.ExecuteAllNextIntention();
 
         // invoke slow down time after 1 second
         Invoke("SlowDownTime", timeBetweenTurns);
     }
 
+
+
+
+
+
+
+    // HELPERS ---------------------------------------------------------------
     public bool IsTimePaused()
     {
         return currentTimeState == TimeState.Pause;

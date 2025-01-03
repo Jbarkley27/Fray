@@ -13,7 +13,7 @@ public class BasicShootSkill : Skill, IPointerClickHandler
     public float projectileSpeed;
     public float burstsPerShotFireRate;
     public float range;
-    public float damage;
+    public int damage;
     public GameObject projectilePrefab;
 
     public override void UseSkill(Vector3 direction)

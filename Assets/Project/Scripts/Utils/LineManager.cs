@@ -12,9 +12,6 @@ public class LineManager : MonoBehaviour
     public float clampedLineLength = 5.0f;
     public static LineManager instance;
     public GameObject player;
-
-    public GameObject hoverPanel;
-
     public HoverManager hoverManager;
 
     private void Awake()
@@ -39,7 +36,7 @@ public class LineManager : MonoBehaviour
 
     public Vector3 GetTurnDirection()
     {
-        return player.transform.position - lineEndObject.transform.position;
+        return lineEndObject.transform.position - player.transform.position;
     }
 
     public void GetLineLength()
@@ -82,8 +79,8 @@ public class LineManager : MonoBehaviour
         {
             if (hit.collider.gameObject.tag == "enemy-visual")
             {
-                Debug.Log("Mouse is over enemy");
-                hoverManager.ShowEnemyStats(hit.collider.gameObject.GetComponent<EnemyStatModule>());
+                // Debug.Log("Mouse is over enemy");
+                hoverManager.ShowEnemyStats(hit.collider.transform.parent.GetComponent<EnemyStatModule>());
                 return true;
             }
         }

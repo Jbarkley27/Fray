@@ -22,6 +22,7 @@ public class EnemyStatUI : MonoBehaviour
     public void UpdateUI(EnemyStatModule enemy)
     {
         if (enemy == null) return;
+        // Debug.Log("Enemy Stats: " + enemy.currentHealth + " Name: " + enemy.gameObject.name);
         healthText.text = enemy.currentHealth + " / " + enemy.maxHealth;
         blockText.text = enemy.currentBlock.ToString();
     }

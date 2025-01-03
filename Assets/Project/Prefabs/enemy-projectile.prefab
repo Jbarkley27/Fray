@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 4014000151845943114}
   - component: {fileID: 1560276501196104622}
   - component: {fileID: 2177366942819775833}
-  - component: {fileID: 7548583169684429123}
   - component: {fileID: 3267896086181547471}
+  - component: {fileID: 6905621607368788316}
   m_Layer: 0
-  m_Name: projectile
+  m_Name: enemy-projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,8 +31,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 2.4}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.8, y: 1, z: 3}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c7cd76eb68bc04c3f8ba7fec584e8c77, type: 2}
+  - {fileID: 2100000, guid: 7d47417d48c0547eb895cdc7b1008a1f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -107,23 +107,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7548583169684429123
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9044424492973828616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d624b682fd70e4cf390a72dbaec188d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 0
-  range: 0
-  direction: {x: 0, y: 0, z: 0}
-  force: 0
-  isSetup: 0
 --- !u!54 &3267896086181547471
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -149,5 +132,22 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 32
+  m_Constraints: 4
   m_CollisionDetection: 2
+--- !u!114 &6905621607368788316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9044424492973828616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a16bf384b08654b31be28518c2a35de5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
+  range: 0
+  direction: {x: 0, y: 0, z: 0}
+  force: 0
+  isSetup: 0

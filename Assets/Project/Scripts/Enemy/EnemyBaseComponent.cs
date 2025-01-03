@@ -4,7 +4,8 @@ public class EnemyBaseComponent : MonoBehaviour
 {
     public Transform attackSource;
     public EnemyIntentionModule intentionModule;
-    public EnemyRotationModule rotationModule;
+    public EnemyMovementModule rotationModule;
+    public bool MovementWithTracking = false;
 
     public void Start()
     {

@@ -2,6 +2,10 @@ using System.Collections;
 using UnityEngine;
 
 public class ProjectileManager : MonoBehaviour {
+
+    public float projectileMaxRange;
+
+
     public struct ProjectileType
     {
         
@@ -17,10 +21,10 @@ public class ProjectileManager : MonoBehaviour {
         [Tooltip("How long between each projectile")]
         public float burstsPerShotFireRate;
         public float range;
-        public float damage;
+        public int damage;
         public GameObject projectile;
 
-        public ProjectileType(string name, float fireRate, int burstAmount, int burstsPerShot, float spread, float projectileSpeed, float burstsPerShotFireRate, float range, float damage, GameObject projectile)
+        public ProjectileType(string name, float fireRate, int burstAmount, int burstsPerShot, float spread, float projectileSpeed, float burstsPerShotFireRate, float range, int damage, GameObject projectile)
         {
             this.name = name;
             this.fireRate = fireRate;
@@ -50,10 +54,18 @@ public class ProjectileManager : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
-    public void ShootProjectile(ProjectileType projectileType, Transform firePoint, Vector3 direction)
+    public void ShootProjectile(ProjectileType projectileType, Transform firePoint, Vector3 direction, bool isEnemy = false)
     {
-        StartCoroutine(ShootProjectileHelper(projectileType, firePoint, direction));
+        if (isEnemy)
+        {
+            StartCoroutine(ShootProjectileEnemyHelper(projectileType, firePoint, direction));
+        }
+        else
+        {
+            StartCoroutine(ShootProjectileHelper(projectileType, firePoint, direction));
+        }
     }
+
 
     public IEnumerator ShootProjectileHelper(ProjectileType projectileType, Transform firePoint, Vector3 direction)
     {
@@ -61,9 +73,30 @@ public class ProjectileManager : MonoBehaviour {
         {
             for (int j = 0; j < projectileType.burstsPerShot; j++)
             {
-                GameObject projectile = Instantiate(projectileType.projectile, firePoint.position, Quaternion.LookRotation(direction, Vector3.up));
+                GameObject projectile = Instantiate(
+                    projectileType.projectile, 
+                    GlobalDataStore.instance.player.transform.position,
+                    GlobalDataStore.instance.player.transform.rotation);
 
                 projectile.GetComponent<Projectile>().SetupProjectile(direction, projectileType.projectileSpeed, projectileType.damage, projectileType.range);
+
+                yield return new WaitForSeconds(projectileType.burstsPerShotFireRate);
+            }
+
+            yield return new WaitForSeconds(projectileType.fireRate);
+        }
+    }
+
+
+    public IEnumerator ShootProjectileEnemyHelper(ProjectileType projectileType, Transform firePoint, Vector3 direction)
+    {
+        for (int i = 0; i < projectileType.burstAmount; i++)
+        {
+            for (int j = 0; j < projectileType.burstsPerShot; j++)
+            {
+                GameObject projectile = Instantiate(projectileType.projectile, firePoint.position, Quaternion.LookRotation(direction, Vector3.up));
+
+                projectile.GetComponent<EnemyProjectile>().SetupProjectile(direction, projectileType.projectileSpeed, projectileType.damage, projectileType.range);
 
                 yield return new WaitForSeconds(projectileType.burstsPerShotFireRate);
             }

@@ -13,7 +13,7 @@ public class EnemyBasicShootSkill : EnemySkill
     public float projectileSpeed;
     public float burstsPerShotFireRate;
     public float range;
-    public float damage;
+    public int damage;
     public GameObject projectilePrefab;
 
     public override void UseSkill(Vector3 direction, Transform attackSource, EnemyBaseComponent enemyBaseComponent)
@@ -29,6 +29,6 @@ public class EnemyBasicShootSkill : EnemySkill
             range,
             damage,
             projectilePrefab
-        ), attackSource, direction);
+        ), attackSource, direction, true);
     }
 }

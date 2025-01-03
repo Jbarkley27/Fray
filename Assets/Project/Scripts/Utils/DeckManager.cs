@@ -84,9 +84,12 @@ public class DeckManager : MonoBehaviour
 
     public void InitiateBattle()
     {
+        Debug.Log("Initiating Battle");
         InitiateDeck();
         InitiateDraw();
         UpdateCoreSkill();
+
+        Debug.Log("Drawing Starting Hand");
         for (int i = 0; i < StartHandSize; i++)
         {
             DrawCard();
@@ -97,6 +100,7 @@ public class DeckManager : MonoBehaviour
     // should only be called when their are changes to the skill list
     public void InitiateDeck()
     {
+        Debug.Log("Creating Deck");
         ClearAll();
         foreach (Skill skill in SkillManager.instance.skills)
         {
@@ -109,6 +113,7 @@ public class DeckManager : MonoBehaviour
 
     public void InitiateDraw()
     {
+        Debug.Log("Creating Draw Pile");
         draw.Clear();
 
         // we want to copy the deck list so we don't modify the original deck
@@ -121,6 +126,7 @@ public class DeckManager : MonoBehaviour
 
     public void UpdateCoreSkill()
     {
+        Debug.Log("Updating Core Skill");
         coreSkillUI.SetupUI(SkillManager.instance.coreSkill);
     }
 
@@ -142,7 +148,6 @@ public class DeckManager : MonoBehaviour
 
     public void AddToHand()
     {        
-        Debug.Log("Adding to hand");
         SkillUI skillUI = draw[0];
         skillUI.transform.SetParent(handUITransform);
         skillUI.HideActiveBorder();
@@ -163,6 +168,7 @@ public class DeckManager : MonoBehaviour
 
     public void DiscardCard(SkillUI skillUI)
     {
+        Debug.Log("Discarding " + skillUI.skill.skillName);
         hand.Remove(skillUI);
         discard.Add(skillUI);
         skillUI.HideActiveBorder();
@@ -191,6 +197,7 @@ public class DeckManager : MonoBehaviour
 
     public void ShuffleDiscardIntoDraw()
     {
+        Debug.Log("Shuffling Discard Pile into Draw Pile");
         draw.AddRange(discard);
         discard.Clear();
         Shuffle(draw);
@@ -198,6 +205,7 @@ public class DeckManager : MonoBehaviour
 
     public void Shuffle(List<SkillUI> skills)
     {
+        Debug.Log("Shuffling Deck");
         for (int i = 0; i < skills.Count; i++)
         {
             int randomIndex = Random.Range(i, skills.Count);
@@ -209,7 +217,6 @@ public class DeckManager : MonoBehaviour
 
     public bool CanDrawCard()
     {
-        Debug.Log(hand.Count + " -- " + MaxHandSize);
         return hand.Count < MaxHandSize;
     }
 

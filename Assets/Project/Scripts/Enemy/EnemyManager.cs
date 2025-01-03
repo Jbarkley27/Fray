@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class EnemyManager : MonoBehaviour
 {
     public List<EnemyBaseComponent> allEnemies = new List<EnemyBaseComponent>();
-
     public static EnemyManager instance;
 
     private void Awake()

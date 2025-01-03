@@ -44,12 +44,29 @@ public class HoverManager : MonoBehaviour
         enemyStatsRoot.transform.position = Input.mousePosition + new Vector3(xOffset, 0, 0);
         enemyStatsRoot.SetActive(true);
         enemyStatsRoot.GetComponent<EnemyStatUI>().UpdateUI(enemy);
+
+        ShowEnemyPath(enemy.gameObject.GetComponent<EnemyMovementModule>());
     }
 
     public void HideEnemyStats()
     {
         if (enemyStatsRoot.activeSelf)
             enemyStatsRoot.SetActive(false);
+
+        HideEnemyPath();
+    }
+
+    public void ShowEnemyPath(EnemyMovementModule enemy)
+    {
+        enemy.pointRoot.gameObject.SetActive(true);
+    }
+
+    public void HideEnemyPath()
+    {
+        EnemyManager.instance.allEnemies.ForEach(enemy =>
+        {
+            enemy.rotationModule.pointRoot.gameObject.SetActive(false);
+        });
     }
 
     public void HideAllPanels()

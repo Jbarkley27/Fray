@@ -56,5 +56,5 @@ MonoBehaviour:
   burstsPerShotFireRate: 0
   range: 1
   damage: 1
-  projectilePrefab: {fileID: 9044424492973828616, guid: 56e5e2eddc08f4c18b55c6164d33796e,
+  projectilePrefab: {fileID: 9044424492973828616, guid: 37da20fcc166a44d5906e65e22bfcb07,
     type: 3}

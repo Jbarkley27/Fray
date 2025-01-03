@@ -1,47 +1,30 @@
-using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
 public class MovementSystem : MonoBehaviour
 {
-    public LineRenderer velocityLine;
     private Rigidbody rb;
     public float rotateSpeed = 1.0f;
-    [Range(0f, 1f)]
     public float boostSpeed = 1.0f; 
     public Animator animator;
     public float dampTime;
-    public float rotateDirection;
-    public float rotateDifference;
+    private float rotateDirection;
+    private float rotateDifference;
 
     void Start()
     {
-        // Get the Rigidbody attached to the ship
         rb = GetComponent<Rigidbody>();
-
-        // Ensure a LineRenderer is assigned
-        if (velocityLine == null)
-        {
-            Debug.LogError("LineRenderer is not assigned. Please attach one in the inspector.");
-            enabled = false;
-            return;
-        }
     }
 
     void Update()
     {
-        DrawVelocityVector();
         HandleAnimations();
         RotateTowards(LineManager.instance.GetTurnDirection());
+        Debug.DrawLine(gameObject.transform.position, gameObject.transform.position + gameObject.transform.forward * 40, Color.green);
     }
 
-    // Draw the velocity vector using the LineRenderer
-    private void DrawVelocityVector()
-    {
-        if (rb == null || velocityLine == null)
-            return;
-    }
 
+    // ROTATION HANDLING -----------------------------------------------------
     private void RotateTowards(Vector3 targetDirection)
     {
         if (targetDirection == Vector3.zero)
@@ -66,6 +49,10 @@ public class MovementSystem : MonoBehaviour
         rb.MoveRotation(smoothedRotation);
     }
 
+
+
+
+    // MOVEMENT HANDLING -----------------------------------------------------
     public void Boost(Vector3 direction)
     {
         if (TurnBasedManager.instance.IsTimePaused())
@@ -73,18 +60,11 @@ public class MovementSystem : MonoBehaviour
         rb.DOMove(direction, boostSpeed).SetEase(Ease.InOutSine);
     }
 
-    public void FreezeMovement()
-    {
-        if (rb == null)
-            return;
-    }
 
-    public void UnfreezeMovement()
-    {
-        if (rb == null)
-            return;
-    }
 
+
+
+    // ANIMATION HANDLING ---------------------------------------------------
     public void HandleAnimations()
     {
         if (animator == null || !TurnBasedManager.instance.IsTimePaused())

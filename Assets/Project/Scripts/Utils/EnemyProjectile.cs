@@ -50,7 +50,7 @@ public class EnemyProjectile : MonoBehaviour
     {
         if (collider.gameObject.tag == "player-hitbox")
         {
-            Debug.Log("Hit enemy");
+            Debug.Log("Hit player");
             Destroy(gameObject);
         }
     }
